@@ -4,6 +4,9 @@
 my_file = open("/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Undetermined/20352.ies")
 file_contents = my_file.read()
 
+#printing name of file to add to string of contents (will be first column in aggreagted table)
+print my_file.name
+
 #Create a template dictionary
 template_dict = {'IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'','LUMINAIRE':'','LAMP':'','BALLAST':'', 'DISTRIBUTION':'','OTHER':'', 'MORE':'',}
 
@@ -24,3 +27,8 @@ for line in lines:
 #turn dictionary into string, but can't figure out how to get it in the order as template, \r is line break so good its in there right?
 s=str(template_dict)
 print s
+
+#grabbing file name
+
+import os
+print os.path.basename(__file__)
