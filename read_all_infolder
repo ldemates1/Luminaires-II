@@ -1,0 +1,15 @@
+#accessing ies file
+from os import listdir
+mypath="/Users/DeMates"
+list_of_filenames=listdir(mypath)
+for filename in list_of_filenames:
+  print filename
+
+#how to move from printing filename to using? Is there something in between importing and writing csv?
+#writing csv file
+
+rows =
+with open(/Users/DeMates/SFO Group Files/Projects/FEMP EEPP/Luminaires/Undetermined/20352.ies, "wb") as csv_file:
+  writer = csv.writer(csv_file, delimiter=',')
+  for row in rows:
+    writer.writerrow(asciifiedRow)
