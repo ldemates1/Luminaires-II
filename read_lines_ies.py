@@ -1,9 +1,9 @@
-#reading one ies file
+#reading one ies file (but goal is to loop through multiple, writing to file with defined columns)
 my_file = open("/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Undetermined/20352.ies")
 file_contents = my_file.read()
 
-#Creating a template dictionary
-template_dict = {'IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'','LUMINAIRE':'','LAMP':'','BALLAST':'', 'DISTRIBUTION':'','OTHER':'', 'MORE':'',}
+#Creating a template dictionary, these are column headers on template
+template_dict = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'','LUMINAIRE':'','LAMP':'','BALLAST':'', 'DISTRIBUTION':'','OTHER':'', 'MORE':'',}
 
 #spliting file into lines
 lines = file_contents.split('\n')
@@ -28,14 +28,25 @@ for line in lines:
     if header_2 in template_dict:
             template_dict[header] = value_2
 
-#trying to turn dictionary into string, but can't figure out how to get it in the order as template, the \r issue too
+#creating file_name variable to link to dictionary
+file_name = my_file.name
+
+#transfering dictionairy to string
 raw_data_string=str(template_dict)
 
-#if we don't want headers -which is what discussed yesterday (doesn't work). I tried: for keys, values in template_dict(): print(values)
+#added file name to data 1 which will hopefully be string with all needed data (worked-yay), still not recognizing IESNA though!
+data_1= file_name +','+ raw_data_string
 
-#added file name to data 1 which will hopefully be string with all needed data (worked-yay)
-data_1= my_file.name +','+ raw_data_string
-
-#trying to get rid of \r (doesn't work)
-data_1=data_1.rstrip()
 print data_1
+
+#accessing the csv I created with the dictionary keys, add wr?
+template_file = open("/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Fields_template.csv")
+template_contents = template_file.read()
+
+#trying to say that if in dictionary then write data to file 
+def data_2(data_1,template_contents)
+    if key in data_1 == template contents:
+
+
+#closing file, I think will be key to moving to next file
+my_file.close()
