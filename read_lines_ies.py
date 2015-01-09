@@ -43,7 +43,7 @@ print data_1
 template_file = open("/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Fields_template.csv")
 template_contents = template_file.read()
 
-#trying to say that if in dictionary then write data to file 
+#trying to say that if in dictionary then write data to file
 def data_2(data_1,template_contents)
     if key in data_1 == template contents:
 
