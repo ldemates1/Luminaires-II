@@ -33,16 +33,19 @@ for line in lines:
         for column in column_names:
             if column == header:
                 ies_file.append(value)
-print ies_file
-#tried to put in string, but takes away comma
 
-#exporting data as csv
-import csv
-output_file = "/Users/DeMates/Documents/Luminaires/Fields_template.csv"
+output_str = ''
+for i in range(len(ies_file)):
+    ies_file[i] = ies_file[i].rstrip('\n')
+    ies_file[i] = ies_file[i].rstrip('\r')
 
-with open('output_file',"w") as output:
-    writer=csv.writer(output, lineterminator='\n')
-    writer.writerows(ies_file)
+    if i == 0:
+        output_str = output_str +  str(ies_file[i])
+    else:
+        output_str = output_str + ',' +  str(ies_file[i])
+
+print output_str
+data= open("Users/DeMates/Documents/Luminaires/Fields_template)
 
 #closing file, I think will be key to moving to next file
 my_file.close()
