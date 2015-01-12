@@ -11,6 +11,16 @@ file_name = my_file.name
 
 #spliting file into lines
 lines = file_contents.split('\n')
+#creating list of values we want from ies files
+ies_file=[]
+
+#appending file name to list
+ies_file.append(file_name)
+
+#appending first line
+my_file.seek(0)
+IESNA = my_file.readline()
+ies_file.append(IESNA)
 
 #grabbing the lines we want, but I can't get it to recognize first line (IESA) though that is separated with :
 for line in lines:
@@ -19,30 +29,20 @@ for line in lines:
         value = split_line[1]
         header = split_line[0]
         header = header[1:]
-if header in column_names:
-    column_names.append(value)
-    print column_names
 
-#accessing the csv I created with the dictionary keys, add wr?
-template_file = open("/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Fields_template.csv")
-template_contents = template_file.read()
+        for column in column_names:
+            if column == header:
+                ies_file.append(value)
+print ies_file
+#tried to put in string, but takes away comma
 
-#filling in dictionary with values from ies files
-        if header in column_names:
-            print value
+#exporting data as csv
+import csv
+output_file = "/Users/DeMates/Documents/Luminaires/Fields_template.csv"
 
-
-
-
-
-#added file name to data 1 which will hopefully be string with all needed data (worked-yay), still not recognizing IESNA though!
-data_1= file_name +','+ raw_data_string
-
-#accessing the csv I created with the dictionary keys, add wr?
-template_file = open("/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Fields_template.csv")
-template_contents = template_file.read()
-
-
+with open('output_file',"w") as output:
+    writer=csv.writer(output, lineterminator='\n')
+    writer.writerows(ies_file)
 
 #closing file, I think will be key to moving to next file
 my_file.close()
