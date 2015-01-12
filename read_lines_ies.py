@@ -45,7 +45,6 @@ for i in range(len(ies_file)):
         output_str = output_str + ',' +  str(ies_file[i])
 
 print output_str
-data= open("Users/DeMates/Documents/Luminaires/Fields_template)
-
-#closing file, I think will be key to moving to next file
-my_file.close()
+f= open("/Users/DeMates/Documents/Luminaires/Fields_template.csv","w")
+f.write(output_str)
+f.close()
