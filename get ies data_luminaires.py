@@ -14,6 +14,7 @@ list_of_filenames=listdir(mypath)
 for filename in list_of_filenames:
     print filename
 
+#applying code to all files in the folder
 def process(filename):
 
 #reading one ies file (but goal is to loop through multiple, writing to file with defined columns)
