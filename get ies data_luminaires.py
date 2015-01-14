@@ -56,9 +56,9 @@ for filename in list_of_filenames:
                                 if i == 0:
                                     output_str = output_str +  str(ies_file[i])
                                 else:
-                                    output_str = output_str + ',' +  str(ies_file[i])
+                                    output_str = output_str + ',' + str(ies_file[i])
 
                                     print output_str
-                                    f= open("/Users/DeMates/Documents/Luminaires/Fields_template.csv","w")
+                                    f= open("/Users/DeMates/Documents/Luminaires/Fields_template.csv",'w')
                                     f.write(output_str)
                                     f.close()
