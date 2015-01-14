@@ -1,5 +1,6 @@
 import os
 from os import listdir
+import csv
 
 mypath="/Users/DeMates/Documents/Luminaires/Sample ies files"
 
@@ -25,6 +26,7 @@ for filename in list_of_filenames:
 
 #spliting file into lines
         lines = file_contents.split('\n')
+
 #creating list of values we want from ies files
         ies_file=[]
 
@@ -54,11 +56,11 @@ for filename in list_of_filenames:
                                 ies_file[i] = ies_file[i].rstrip('\r')
 
                                 if i == 0:
-                                    output_str = output_str +  str(ies_file[i])
+                                    output_str = output_str + str(ies_file[i])
                                 else:
                                     output_str = output_str + ',' + str(ies_file[i])
-
                                     print output_str
-                                    f= open("/Users/DeMates/Documents/Luminaires/Fields_template.csv",'w')
-                                    f.write(output_str)
-                                    f.close()
+
+
+        writer= csv.writer(open('/Users/DeMates/Documents/Luminaires/Fields_template.csv','a'), delimiter=',')
+        writer.writerow([output_str])
