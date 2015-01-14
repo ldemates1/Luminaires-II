@@ -14,7 +14,7 @@ list_of_filenames=listdir(mypath)
 print list_of_filenames
 
 for filename in list_of_filenames:
-        my_file = open(filename)
+        my_file = open(str(mypath+'/'+filename))
         file_contents = my_file.read()
 
 #Creating a list in the order of the column headers
