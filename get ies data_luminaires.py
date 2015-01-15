@@ -24,43 +24,43 @@ for filename in list_of_filenames:
 #creating file_name variable to link to dictionary
         file_name = my_file.name
 
-#spliting file into lines
-        lines = file_contents.split('\n')
-
 #creating list of values we want from ies files
         ies_file=[]
 
 #appending file name to list
         ies_file.append(file_name)
 
-#appending first line
+#spliting file into lines
+        lines = file_contents.split('\n')
+
+#appending first line, why is this not updating to next file, but file_name is?
         my_file.seek(0)
         IESNA = my_file.readline()
         ies_file.append(IESNA)
 
 #grabbing the lines we want, but I can't get it to recognize first line (IESA) though that is separated with :
-        for line in lines:
+        for column in column_names:
+
+            for line in lines:
                 if '[' in line:
                     split_line = line.split(']')
                     value = split_line[1]
                     header = split_line[0]
                     header = header[1:]
 
-                    for column in column_names:
-                        if column == header:
-                            ies_file.append(value)
+                    if column == header:
+                        ies_file.append(value)
 
-                            output_str = ''
-                            for i in range(len(ies_file)):
-                                ies_file[i] = ies_file[i].rstrip('\n')
-                                ies_file[i] = ies_file[i].rstrip('\r')
-
-                                if i == 0:
-                                    output_str = output_str + str(ies_file[i])
-                                else:
-                                    output_str = output_str + ',' + str(ies_file[i])
-                                    print output_str
+            output_str = ''
+            for i in range(len(ies_file)):
+                ies_file[i] = ies_file[i].rstrip('\n')
+                ies_file[i] = ies_file[i].rstrip('\r')
+                if i == 0:
+                    output_str = output_str + str(ies_file[i])
+                else:
+                    output_str = output_str + ',' + str(ies_file[i])
 
 
         writer= csv.writer(open('/Users/DeMates/Documents/Luminaires/Fields_template.csv','a'), delimiter=',')
         writer.writerow([output_str])
+        my_file.close()
