@@ -20,7 +20,8 @@ for filename in list_of_filenames:
         file_contents = my_file.read()
 
 #Creating a list in the order of the column headers
-        column_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT','LUMINAIRE','LAMP','BALLAST','DISTRIBUTION','OTHER','MORE']
+        column_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT','LUMINAIRE','LAMP','BALLAST','DISTRIBUTION']
+        odd_ones = ['OTHER','MORE']
 
 #creating file_name variable to link to dictionary
         file_name = my_file.name
@@ -50,11 +51,20 @@ for filename in list_of_filenames:
                     header = header[1:]
 
 
-#trying to say if more than one header = one column then combine values (right now it is line breaking so code to add comas to delimite is breaking up
-
+#trying to say if more than one header = one column then combine values under that header- doesn't work!!!
                     if column == header:
                         ies_file.append(value)
-
+        for column_2 in odd_ones:
+            for line in lines:
+                if '[' in line:
+                    split_line = line.split(']')
+                    value = split_line[1]
+                    header = split_line[0]
+                    header = header[1:]
+                    if header == header:
+                        header= ('').join(value)
+                        if column_2 == header:
+                            ies_file.append(value)
 
             output_str = ''
             for i in range(len(ies_file)):
@@ -64,6 +74,7 @@ for filename in list_of_filenames:
                     output_str = output_str + str(ies_file[i])
                 else:
                     output_str = output_str + ',' + str(ies_file[i])
+
 
 
         writer= csv.writer(open('/Users/DeMates/Documents/Luminaires/Fields_template.csv','a'), delimiter=',')
