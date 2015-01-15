@@ -1,6 +1,7 @@
 import os
 from os import listdir
 import csv
+import numpy as np
 
 mypath="/Users/DeMates/Documents/Luminaires/Sample ies files"
 
@@ -48,8 +49,12 @@ for filename in list_of_filenames:
                     header = split_line[0]
                     header = header[1:]
 
+
+#trying to say if more than one header = one column then combine values (right now it is line breaking so code to add comas to delimite is breaking up
+
                     if column == header:
                         ies_file.append(value)
+
 
             output_str = ''
             for i in range(len(ies_file)):
