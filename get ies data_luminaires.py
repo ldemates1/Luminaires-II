@@ -2,7 +2,7 @@ import os
 from os import listdir
 import csv
 
-mypath="/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Commercial_Recessed"
+mypath="/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Commercial_Suspended"
 
 #printing how many files in that folder, just to check path is correct
 isfile=os.path.isfile
