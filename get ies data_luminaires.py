@@ -20,8 +20,7 @@ for filename in list_of_filenames:
         file_contents = my_file.read()
 
 #Creating a list in the order of the column headers
-        column_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT','LUMINAIRE','LAMP','BALLAST','DISTRIBUTION']
-        odd_ones = ['OTHER','MORE']
+        column_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT','LUMINAIRE','LAMP','BALLAST','DISTRIBUTION','OTHER','MORE']
 
 #creating file_name variable to link to dictionary
         file_name = my_file.name
@@ -54,18 +53,21 @@ for filename in list_of_filenames:
 #trying to say if more than one header = one column then combine values under that header- doesn't work!!!
                     if column == header:
                         ies_file.append(value)
-        for column_2 in odd_ones:
-            for line in lines:
-                if '[' in line:
-                    split_line = line.split(']')
-                    value = split_line[1]
-                    header = split_line[0]
-                    header = header[1:]
-                    if header == header:
-                        header= ('').join(value)
-                        if column_2 == header:
-                            ies_file.append(value)
 
+#getting the other and more values combined in one cell, appended to the end of ies file
+        if (len(ies_file) > len(column_names)):
+            new_ies_file = []
+            list_index = 0
+            for item in ies_file:
+                if list_index < len(column_names):
+                    new_ies_file.append(item)
+                else:
+                    extras_ies_file[len(column_names)-1] = new_ies_file[len(column_names)-1] + ' ' + item
+                list_index += 1
+            myString = ",".join(new_ies_file)
+                print new_ies_file
+
+#this was to put in string form with comas so formatted right when open in excel
             output_str = ''
             for i in range(len(ies_file)):
                 ies_file[i] = ies_file[i].rstrip('\n')
@@ -75,8 +77,7 @@ for filename in list_of_filenames:
                 else:
                     output_str = output_str + ',' + str(ies_file[i])
 
-
-
+#exporting to csv in rows, each ies file is one row with columns delimited
         writer= csv.writer(open('/Users/DeMates/Documents/Luminaires/Fields_template.csv','a'), delimiter=',')
         writer.writerow([output_str])
         my_file.close()
