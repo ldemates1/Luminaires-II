@@ -41,7 +41,7 @@ for filename in list_of_filenames:
 #grabbing the lines we want, but cannot get
         headers = []
         values= []
-for column in column_names:
+
         for line in lines:
             if '[' in line:
                 split_line = line.split(']')
