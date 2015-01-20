@@ -18,10 +18,10 @@ for filename in list_of_filenames:
         my_file = open(str(mypath+'/'+filename))
         file_contents = my_file.read()
 
-#Creating a list in the order of the column headers
+#Creating a list in the order of the column headers, want to export in this order
         column_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT','LUMINAIRE','LAMP','BALLAST','DISTRIBUTION','OTHER','MORE']
 
-#creating file_name variable to link to dictionary
+#creating file_name variable to link to column_names list
         file_name = my_file.name
 
 #creating list of values we want from ies files
@@ -33,36 +33,36 @@ for filename in list_of_filenames:
 #spliting file into lines
         lines = file_contents.split('\n')
 
-#appending first line, why is this not updating to next file, but file_name is?
+#creating the IESNA variable to link to column_names list
         my_file.seek(0)
         IESNA = my_file.readline()
         ies_file.append(IESNA)
 
-#grabbing the lines we want, but cannot get
+#grabbing the lines we want and putting 'Not Available for' headers that are not in columns_names
         headers = []
         values= []
 
         for line in lines:
             if '[' in line:
                 split_line = line.split(']')
-                value = str(split_line[1])
+                value = (split_line[1])
                 header = split_line[0]
-                header = str(header[1:])
-
+                header = (header[1:])
+#trying to create the 'headers' and 'values' lists to grab from to add to ies_file. lists are capturing the data
                 headers.append(header)
                 values.append(value)
 
-
-
-        for i in range(0, len(headers)):
-            if column in headers:
+            for i in range(len(headers)):
                 value = values[i]
-                ies_file.append(value)
+
             else:
                 value = "Not available"
-                ies_file.append(value)
 
 
+        for column in column_names:
+            ies_file.append(value)
+
+#taking out line breaks and putting into string so can delimit in right places
         output_str = ''
         for i in range(len(ies_file)):
             ies_file[i] = ies_file[i].rstrip('\n')
