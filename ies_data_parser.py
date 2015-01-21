@@ -50,8 +50,13 @@ for filename in list_of_filenames:
             # Using rstrip to remove the return characters, and lstrip to remove
             # preceeding whitespace from the value
             line_content = line.split(']')
-            line_header = line_content[0][1:].rstrip('[\r\n')
+
+            line_header = line_content[0].split('[')
+            line_header = line_header[1].rstrip('[\r\n')
+
             line_value = line_content[1].rstrip('[\r\n').lstrip(' ')
+
+            #print line_header + ' ' + line_value
 
             # Now we can check if the header is one that we care about
             # If so, put it into the header_value dictionary, and update the relevant
