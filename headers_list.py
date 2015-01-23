@@ -26,14 +26,18 @@ for filename in list_of_filenames:
             # If there are two elements
             if(len(line_content) > 1):
                 line_header = line_content[0].split('[')
-    def unique(line_header):
-        uniques = []
-        for item in line_header:
-            if item not in uniques:
-                uniques.append(item)
-        return uniques
+                if(len(line_header) > 1):
+
+                    line_header = line_header[1].rstrip('[\r\n')
+
+                    print line_header
+
+                    from collection
+                    counter(line_header)
+                    print counter
+
 
     # exporting the list of unique headers to csv
-        writer= csv.writer(open(output_file,'a'), delimiter=',')
-        writer.writerow([uniques])
-        my_file.close()
+                    writer= csv.writer(open(output_file,'a'), delimiter=',')
+                    writer.writerow([line_header])
+                    my_file.close()
