@@ -30,9 +30,18 @@ for filename in list_of_filenames:
 
                     line_header = line_header[1].rstrip('[\r\n')
 
-                    print line_header
+                    #ATTEMPT 1: creating list and count of only unique headers
+                    def unique_headers(line_header):
+                        keys = []
+                        for e in line_value:
+                            if e not in keys:
+                                keys.append(e)
+                        return keys
+                        print keys
+                        print len(keys)
+
 
     # exporting the list of unique headers to csv
                     writer= csv.writer(open(output_file,'a'), delimiter=',')
-                    writer.writerow([line_header])
+                    writer.writerow([keys])
                     my_file.close()
