@@ -43,27 +43,26 @@ for filename in list_of_filenames:
     lines = file_contents.split('\n')
 
     # Now, we can go through the list line by line and extract the header values
+
     for line in lines:
-        # If a line starts with a bracket, then it might contain a relevant value
+        # If line contains TILT, want to break into header and value with =
         if 'TILT' in line:
             # Split the line into header and value, and take out return characters
             # Using rstrip to remove the return characters, and lstrip to remove
             # preceeding whitespace from the value
-            tilt_line_content = line.split()
-            print tilt_line_content
+            tilt_line_content = line.split('=')
 
-
+            #Getting the tilt value
             if(len(tilt_line_content) > 1):
-                tilt_line_header = tilt_line_content[0].split('=')
+                tilt_line_value = tilt_line_content[1].split('=')
 
-                if(len(tilt_line_header) > 1):
+                tilt_line_value = tilt_line_content[1].rstrip('[\r\n').lstrip(' ')
+                print tilt_line_value
 
-                    tilt_line_header = tilt_line_header[1].rstrip('[\r\n')
-
-                    tilt_line_value = tilt_line_content[1].rstrip('[\r\n').lstrip(' ')
-
-                        print tilt_line_value
-
+                #Adding tilt value to disctionary
+                header_value['TILT'] = tilt_line_value
+                header_found['TILT'] = True
+    print header_value
     # The header values dictionary should be populated.
     # Now we need to turn that dictionary into a csv line in the correct order
     output_string = ''
