@@ -12,17 +12,17 @@ output_file = '/Users/DeMates/Documents/Luminaires/Commercial_Suspended01232015.
 list_of_filenames=listdir(mypath)
 
 # List with the header names that we care about in the right order
-header_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT','LUMINAIRE','LAMP','BALLAST','DISTRIBUTION','OTHER','MORE']
+header_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT', 'LAMPCAT', 'LUMINAIRE','LAMP','BALLAST','DISTRIBUTION', '_MOUNTING', 'OTHER','MORE']
 
 for filename in list_of_filenames:
 
     # Dictionary for keeping track of whether or not a particular header is present in the current
     # IES file being processed
-    header_found = {'file_name':False,'IESNA':False,'TEST':False,'DATE':False,'ISSUEDATE':False,'MANUFAC':False,'LUMCAT':False,'LUMINAIRE':False,'LAMP':False,'BALLAST':False,'DISTRIBUTION':False,'OTHER':False,'MORE':False}
+    header_found = {'file_name':False,'IESNA':False,'TEST':False,'DATE':False,'ISSUEDATE':False,'MANUFAC':False,'LUMCAT':False, 'LAMPCAT':False, 'LUMINAIRE':False,'LAMP':False,'BALLAST':False,'DISTRIBUTION':False, '_MOUNTING':False, 'OTHER':False,'MORE':False}
 
     # Dictionary that will hold the values associated with each header
     # Initialized to empty strings
-    header_value = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'','LUMINAIRE':'','LAMP':'','BALLAST':'','DISTRIBUTION':'','OTHER':'','MORE':''}
+    header_value = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'', 'LAMPCAT':'', 'LUMINAIRE':'','LAMP':'','BALLAST':'','DISTRIBUTION':'','_MOUNTING':'','OTHER':'','MORE':''}
 
     #Open IES file for processing
     my_file = open(str(mypath+'/'+filename))
