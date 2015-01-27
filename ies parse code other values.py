@@ -12,17 +12,17 @@ output_file = '/Users/DeMates/Documents/Luminaires/Othervalues.csv'
 list_of_filenames=listdir(mypath)
 
 # List with the header names that we care about in the right order
-header_names = ['file_name', 'TILT', 'NUMBER_LAMP', 'LUMEN_LAMP', 'BALLAST_FACTOR', 'INPUTT_WATTS']
+header_names = ['file_name', 'TILT', 'NUMBER_LAMP', 'LUMEN_LAMP', 'WIDTH', 'LENGTH', 'HEIGHTH', 'BALLAST_FACTOR', 'INPUTT_WATTS']
 
 for filename in list_of_filenames:
 
     # Dictionary for keeping track of whether or not a particular header is present in the current
     # IES file being processed
-    header_found = {'file_name':False,'TILT':False,'NUMBER_LAMP':False,'LUMEN_LAMP':False,'BALLAST_FACTOR':False,'INPUTT_WATTS':False}
+    header_found = {'file_name':False,'TILT':False,'NUMBER_LAMP':False,'LUMEN_LAMP':False, 'WIDTH': False, 'LENGTH': False, 'HEIGHTH': False,'BALLAST_FACTOR':False,'INPUTT_WATTS':False}
 
     # Dictionary that will hold the values associated with each header
     # Initialized to empty strings
-    header_value = {'file_name':'','TILT':'','NUMBER_LAMP':'','LUMEN_LAMP':'','BALLAST_FACTOR':'','INPUTT_WATTS':''}
+    header_value = {'file_name':'','TILT':'','NUMBER_LAMP':'','LUMEN_LAMP':'', 'WIDTH':'', 'LENGTH':'', 'HEIGHTH':'', 'BALLAST_FACTOR':'','INPUTT_WATTS':''}
 
     #Open IES file for processing
     my_file = open(str(mypath+'/'+filename))
