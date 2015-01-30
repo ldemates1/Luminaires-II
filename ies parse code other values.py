@@ -31,9 +31,13 @@ for filename in list_of_filenames:
     for lines in file_contents:
         break_at_tilt = file_contents.split('TILT')[1]
         list_special_lines = break_at_tilt.split('\r\n')
+        list_special_values = list_special_lines.split('')
 
 
-        print list_special_lines[1]
+
+    for i in list_special_lines:
+            list_special_values = list_special_lines.split('')
+        print list_special_values
 
 
 
