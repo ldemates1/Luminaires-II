@@ -28,19 +28,20 @@ for filename in list_of_filenames:
     my_file = open(str(mypath+'/'+filename))
     file_contents = my_file.read()
 
-    # Get the file name
-    header_value['file_name'] = filename
-    header_found['file_name'] = True
+    for lines in file_contents:
+        break_at_tilt = file_contents.split('TILT')[1]
+        list_special_values =
 
-    # Creating the IESNA variable to link to list
-    my_file.seek(0)
-    IESNA = my_file.readline().rstrip('\r\n')
-    header_value['IESNA'] = IESNA
-    header_found['IESNA'] = True
+            
 
-    # Now we need to loop through and find the other headers that we're interested in
-    # First, make a list where each element is a line in the file
-    lines = file_contents.split('\n')
+
+
+
+
+
+
+
+
     # Now, we can go through the list line by line and extract the header values
 
     for line in lines:
@@ -63,9 +64,11 @@ for filename in list_of_filenames:
                 header_value['TILT'] = tilt_line_value
                 header_found['TILT'] = True
 
-                #this gets me next line from the top but not after the tilt line
-                next_line = my_file.next()
-                print next_line
+
+        #need to add above to final parse code
+
+
+
 
     # The header values dictionary should be populated.
     # Now we need to turn that dictionary into a csv line in the correct order
