@@ -22,7 +22,7 @@ for filename in list_of_filenames:
 
     # Dictionary that will hold the values associated with each header
     # Initialized to empty strings
-    header_value = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'', 'LAMPCAT':'', 'LUMINAIRE':'','LAMP':'','BALLAST':'','DISTRIBUTION':'','_MOUNTING':'','TILT':'','NUMBER_LAMP':'','LUMEN_LAMP':'','WIDTH':'','LENGTH':'','HEIGHT':'','BALLAST_FACTOR':'','INPUTT_WATTS':'', 'OTHER':'','MORE':''}
+    header_value = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'', 'LAMPCAT':'', 'LUMINAIRE':'','LAMP':'','BALLAST':'','DISTRIBUTION':'','_MOUNTING':'','TILT':'','NUMBER_LAMP':'','LUMEN_LAMP':'','WIDTH':'','LENGTH':'','HEIGHT':'','BALLAST_FACTOR':'','INPUTT_WATTS':'','OTHER':'','MORE':''}
 
     #Open IES file for processing
     my_file = open(str(mypath+'/'+filename))
@@ -42,11 +42,9 @@ for filename in list_of_filenames:
     # First, make a list where each element is a line in the file
     lines = file_contents.split('\n')
 
-
     # Now, we can go through the list line by line and extract the header values
     for line in lines:
-        # If a line starts with a bracket, then it might contain a relevant value
-
+        #If a line has TILT then we want that value
         if 'TILT' in line:
             # Split the line into header and value, and take out return characters
             # Using rstrip to remove the return characters, and lstrip to remove
@@ -64,7 +62,7 @@ for filename in list_of_filenames:
                 header_value['TILT'] = tilt_line_value
                 header_found['TILT'] = True
 
-
+        # If a line starts with a bracket, then it might contain a relevant value
         elif '[' in line:
             # Split the line into header and value, and take out return characters
             # Using rstrip to remove the return characters, and lstrip to remove
