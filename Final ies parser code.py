@@ -6,7 +6,7 @@ import csv
 mypath="/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Commercial_Suspended"
 
 # Change this to the path of the output file
-output_file = '/Users/DeMates/Documents/Luminaires/Commercial_Suspended01232015.csv'
+output_file = '/Users/DeMates/Documents/Luminaires/Adding_to_dictionary.csv'
 
 #listing all the filenames in the directory
 list_of_filenames=listdir(mypath)
@@ -42,10 +42,30 @@ for filename in list_of_filenames:
     # First, make a list where each element is a line in the file
     lines = file_contents.split('\n')
 
+
     # Now, we can go through the list line by line and extract the header values
     for line in lines:
         # If a line starts with a bracket, then it might contain a relevant value
-        if '[' in line:
+
+        if 'TILT' in line:
+            # Split the line into header and value, and take out return characters
+            # Using rstrip to remove the return characters, and lstrip to remove
+            # preceeding whitespace from the value
+
+            tilt_line_content = line.split('=')
+
+            #Getting the tilt value
+            if(len(tilt_line_content) > 1):
+                tilt_line_value = tilt_line_content[1].split('=')
+
+                tilt_line_value = tilt_line_content[1].rstrip('[\r\n').lstrip(' ')
+
+                #Adding tilt value to disctionary
+                header_value['TILT'] = tilt_line_value
+                header_found['TILT'] = True
+
+
+        elif '[' in line:
             # Split the line into header and value, and take out return characters
             # Using rstrip to remove the return characters, and lstrip to remove
             # preceeding whitespace from the value
@@ -81,6 +101,7 @@ for filename in list_of_filenames:
                     pass
             else:
                 pass
+
     # The header values dictionary should be populated.
     # Now we need to turn that dictionary into a csv line in the correct order
     output_string = ''
