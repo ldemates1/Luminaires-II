@@ -28,57 +28,19 @@ for filename in list_of_filenames:
     my_file = open(str(mypath+'/'+filename))
     file_contents = my_file.read()
 
-    for lines in file_contents:
-        break_at_tilt = file_contents.split('TILT')[1]
-        list_special_lines = break_at_tilt.split('\r\n')
+    #break into everything below 'Tilt'
+
+    break_at_tilt = file_contents.split('TILT')[1]
+        #breaking all the values under tilt into their own lines
+    break_at_line = break_at_tilt.split('\r\n')
 
 
-        list_special_values = []
+    #indexing each line, spaces are recognized in index, but ok for now
 
-
-    for i in range(0,len(list_special_lines)):
-        values = list_special_lines[i]
-        split_values = values.split(' ')
-        for i in range(0,len(split_values)):
-            if split_values != '':
-                list_special_values.append(split_values)
-            else:
-                pass
-
-        print list_special_values
-
-
-
-
-
-
-    # Now, we can go through the list line by line and extract the header values
-
-    for line in lines:
-        # If line contains TILT, want to break into header and value with =
-        if 'TILT' in line:
-            # Split the line into header and value, and take out return characters
-            # Using rstrip to remove the return characters, and lstrip to remove
-            # preceeding whitespace from the value
-
-            tilt_line_content = line.split('=')
-
-            #Getting the tilt value
-            if(len(tilt_line_content) > 1):
-                tilt_line_value = tilt_line_content[1].split('=')
-
-                tilt_line_value = tilt_line_content[1].rstrip('[\r\n').lstrip(' ')
-                print tilt_line_value
-
-                #Adding tilt value to disctionary
-                header_value['TILT'] = tilt_line_value
-                header_found['TILT'] = True
-
-
-        #need to add above to final parse code
-
-
-
+    for i in range(len(break_at_line)):
+        list_values = break_at_line[i]
+        split_values = list_values.split(' ')
+        print split_values
 
     # The header values dictionary should be populated.
     # Now we need to turn that dictionary into a csv line in the correct order
