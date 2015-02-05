@@ -146,7 +146,7 @@ class ies_parser:
 if __name__ == "__main__":
 
     mypath = "/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Commercial_Suspended"
-    output_file = "/Users/DeMates/Documents/Luminaires/All_values_Suspended.csv"
+    output_file = "/Users/DeMates/Documents/Luminaires/All_values_Suspended2.csv"
     list_of_filenames=listdir(mypath)
 
     for filename in list_of_filenames:
