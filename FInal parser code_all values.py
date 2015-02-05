@@ -30,7 +30,7 @@ class ies_parser:
 
     def parse_after_headers(self):
         indexed_values = []
-        print self.filepath
+        #print self.filepath
         break_at_tilt = self.file_contents.split('TILT')[1]
         #breaking all the values under tilt into their own lines
         break_at_line = break_at_tilt.split('\r\n')
@@ -145,9 +145,12 @@ class ies_parser:
 
 if __name__ == "__main__":
 
-    mypath = 'ies'
-    output_file = 'output.csv'
+    mypath = "/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Commercial_Suspended"
+    output_file = "/Users/DeMates/Documents/Luminaires/All_values_Suspended.csv"
     list_of_filenames=listdir(mypath)
 
     for filename in list_of_filenames:
-        parser = ies_parser(mypath+'/'+filename, output_file)
+        if filename == '.DS_Store':
+            pass
+        else:
+            parser = ies_parser(mypath+'/'+filename, output_file)
