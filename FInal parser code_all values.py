@@ -150,7 +150,7 @@ if __name__ == "__main__":
     list_of_filenames=listdir(mypath)
 
     for filename in list_of_filenames:
-        if filename == '.DS_Store':
-            pass
-        else:
+        if filename[-3:] == 'ies':
             parser = ies_parser(mypath+'/'+filename, output_file)
+        else:
+            pass
