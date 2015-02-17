@@ -12,6 +12,9 @@ class ies_parser:
         self.data_below_headers = self.parse_after_headers()
         self.populate_headers()
         self.populate_non_headers()
+        self.max_vert_angle = self.get_max_vert_angle()
+        self.line_repeat_count = self.calculate_line_repeat()
+        self.data_lists = self.populate_data_lists()
         #self.write_to_file()
 
     def read_file(self, path):
@@ -128,11 +131,12 @@ class ies_parser:
                 else:
                     pass
 
-    def get_ies_type(self):
-
+    def get_max_vert_angle(self):
         max_vert_angle = (float(self.data_below_headers[0][3])-1) * float(self.data_below_headers[2][1])
         #print self.header_value['file_name'], " Vert. Ang. up to: ", max_vert_angle
+        return max_vert_angle
 
+    def calculate_line_repeat(self):
         # Begin searching for the max vert. angle on the third line below the header values
         last_angle_index = 1
         found_last_angle = False
@@ -140,11 +144,36 @@ class ies_parser:
             last_angle_index += 1
 
             for item in self.data_below_headers[last_angle_index]:
-                if max_vert_angle == float(item):
+                if self.max_vert_angle == float(item):
                     found_last_angle = True
 
+        #Subtract 1 to account for the 2 lines under the headers that are not angles
+        # Angles will repeat every line_repeat_count line(s).
+        line_repeat_count = last_angle_index-1
+        #print line_repeat_count
+        return line_repeat_count
 
-        print self.header_value['file_name'], " Found the last angle on line: ", last_angle_index
+    def populate_data_lists(self):
+
+        number_of_val_lists = (int(self.data_below_headers[0][3])-1)/2
+        print number_of_val_lists
+
+        # Create list of empty lists for values
+        candela_vals= []
+        for i in range(number_of_val_lists):
+            candela_vals.append([])
+
+        total_count=0
+        for i in range(self.line_repeat_count+3, len(self.data_below_headers)):
+            for j in range(0, len(self.data_below_headers[i])):
+                # Only care about even values in each line (midpoints)
+                if j % 2 != 0:
+                    index = total_count%number_of_val_lists
+                    candela_vals[index].append(self.data_below_headers[i][j])
+                    total_count += 1
+
+        return candela_vals
+        #print candela_vals[1]
 
 
     def write_to_file(self):
@@ -173,6 +202,7 @@ if __name__ == "__main__":
             parser = ies_parser(mypath+'/'+filename, output_file)
             # Print data after headers for debugging
             #parser.print_below_headers()
-            parser.get_ies_type()
+            parser.populate_data_lists()
+
         else:
             pass
