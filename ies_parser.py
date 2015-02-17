@@ -12,7 +12,7 @@ class ies_parser:
         self.data_below_headers = self.parse_after_headers()
         self.populate_headers()
         self.populate_non_headers()
-        self.write_to_file()
+        #self.write_to_file()
 
     def read_file(self, path):
         my_file = open(str(path))
@@ -39,8 +39,7 @@ class ies_parser:
 
         for line in break_at_line:
             line_elements = line.split()
-            for element in line_elements:
-                indexed_values.append(element)
+            indexed_values.append(line_elements)
         return indexed_values
 
     def populate_non_headers(self):
@@ -52,13 +51,13 @@ class ies_parser:
         #   9 = HEIGHT
         #   10 = BALLAST_FACTOR
         #   12 = INPUT_WATTS
-        self.header_value['NUMBER_LAMP'] = self.data_below_headers[0]
-        self.header_value['LUMEN_LAMP'] = self.data_below_headers[1]
-        self.header_value['WIDTH'] = self.data_below_headers[7]
-        self.header_value['LENGTH'] = self.data_below_headers[8]
-        self.header_value['HEIGHT'] = self.data_below_headers[9]
-        self.header_value['BALLAST_FACTOR'] = self.data_below_headers[10]
-        self.header_value['INPUT_WATTS'] = self.data_below_headers[12]
+        self.header_value['NUMBER_LAMP'] = self.data_below_headers[0][0]
+        self.header_value['LUMEN_LAMP'] = self.data_below_headers[0][1]
+        self.header_value['WIDTH'] = self.data_below_headers[0][7]
+        self.header_value['LENGTH'] = self.data_below_headers[0][8]
+        self.header_value['HEIGHT'] = self.data_below_headers[0][9]
+        self.header_value['BALLAST_FACTOR'] = self.data_below_headers[1][0]
+        self.header_value['INPUT_WATTS'] = self.data_below_headers[1][2]
 
     def print_headers(self):
         print self.header_value
@@ -128,6 +127,12 @@ class ies_parser:
                         pass
                 else:
                     pass
+
+    def get_ies_type(self):
+
+        max_vert_angle = (float(self.data_below_headers[0][3])-1) * float(self.data_below_headers[2][1])
+        print self.header_value['file_name'], " Vert. Ang. up to: ", max_vert_angle
+
     def write_to_file(self):
         # Take self.header_values, and append it to a csv file
         output_string = ''
@@ -145,12 +150,15 @@ class ies_parser:
 
 if __name__ == "__main__":
 
-    mypath = "/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Commercial_Suspended"
-    output_file = "/Users/DeMates/Documents/Luminaires/All_values_Suspended2.csv"
+    mypath = "ies_samp"
+    output_file = "output.csv"
     list_of_filenames=listdir(mypath)
 
     for filename in list_of_filenames:
-        if filename[-3:] == 'ies':
+        if filename[-3:].lower() == 'ies':
             parser = ies_parser(mypath+'/'+filename, output_file)
+            # Print data after headers for debugging
+            #parser.print_below_headers()
+            parser.get_ies_type()
         else:
             pass
