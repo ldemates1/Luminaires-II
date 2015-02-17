@@ -131,7 +131,21 @@ class ies_parser:
     def get_ies_type(self):
 
         max_vert_angle = (float(self.data_below_headers[0][3])-1) * float(self.data_below_headers[2][1])
-        print self.header_value['file_name'], " Vert. Ang. up to: ", max_vert_angle
+        #print self.header_value['file_name'], " Vert. Ang. up to: ", max_vert_angle
+
+        # Begin searching for the max vert. angle on the third line below the header values
+        last_angle_index = 1
+        found_last_angle = False
+        while found_last_angle == False:
+            last_angle_index += 1
+
+            for item in self.data_below_headers[last_angle_index]:
+                if max_vert_angle == float(item):
+                    found_last_angle = True
+
+
+        print self.header_value['file_name'], " Found the last angle on line: ", last_angle_index
+
 
     def write_to_file(self):
         # Take self.header_values, and append it to a csv file
