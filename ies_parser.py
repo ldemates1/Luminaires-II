@@ -199,7 +199,7 @@ class ies_parser:
                     angle_total_lumens += (self.data_lists[i][j] * 2)
             total_lumens += angle_total_lumens / (len(self.data_lists[i]) * 2 - 2)
 
-        print total_lumens
+        #print total_lumens
         return total_lumens
 
 
@@ -224,16 +224,23 @@ class ies_parser:
 
 if __name__ == "__main__":
 
-    mypath = "ies_samp"
+    mypath = "ies"
     output_file = "output.csv"
     list_of_filenames=listdir(mypath)
-
+    count = 0
+    fail_count = 0
     for filename in list_of_filenames:
         if filename[-3:].lower() == 'ies':
-            parser = ies_parser(mypath+'/'+filename, output_file)
-            # Print data after headers for debugging
-            #parser.print_below_headers()
-            parser.calculate_total_lumens()
-
+            #print filename
+            try:
+                parser = ies_parser(mypath+'/'+filename, output_file)
+                parser.calculate_total_lumens()
+                count += 1
+            except:
+                print filename
+                fail_count += 1
         else:
             pass
+
+    print "Processed ", count, " files."
+    print "Failed to process ", fail_count, " files."
