@@ -179,7 +179,33 @@ class ies_parser:
         #print candela_vals[1]
 
     def calculate_total_lumens(self):
-        pass
+
+        const_array = []
+        if float(self.data_below_headers[2][1]) == 5:
+            const_array = DEGREE_CONSTANTS_10
+        else:
+            const_array = DEGREE_CONSTANTS_5
+
+        total_lumens = 0
+        for i in range(len(self.data_lists)):
+            self.data_lists[i][:] =[float(x)*const_array[i] for x in self.data_lists[i]]
+            #print self.data_lists[i]
+
+            angle_total_lumens = 0
+            for j in range(len(self.data_lists[i])):
+                if j == 0 or j == (len(self.data_lists[i])-1):
+                    angle_total_lumens += self.data_lists[i][j]
+                else:
+                    angle_total_lumens += (self.data_lists[i][j] * 2)
+            total_lumens += angle_total_lumens / (len(self.data_lists[i]) * 2 - 2)
+
+        print total_lumens
+        return total_lumens
+
+
+    def mult_by_constant(self, element, const):
+        return element * const
+
 
     def write_to_file(self):
         # Take self.header_values, and append it to a csv file
@@ -207,6 +233,7 @@ if __name__ == "__main__":
             parser = ies_parser(mypath+'/'+filename, output_file)
             # Print data after headers for debugging
             #parser.print_below_headers()
+            parser.calculate_total_lumens()
 
         else:
             pass
