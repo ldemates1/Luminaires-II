@@ -1,6 +1,17 @@
 from os import listdir
 import csv
 
+DEGREE_CONSTANTS_10 = [0.095,0.283,0.463,0.628,0.774,0.897,
+                       0.993,1.058,1.091,1.091,1.058,0.993,
+                       0.897,0.774,0.628,0.463,0.283,0.095]
+
+DEGREE_CONSTANTS_5 = [0.0239,0.0715,0.1186,0.1649,0.2097,0.2531,
+                      0.2946,0.3337,0.3703,0.4041,0.4349,0.4623,
+                      0.4862,0.5064,0.5228,0.5351,0.5434,0.5476,
+                      0.5476,0.5434,0.5351,0.5228,0.5064,0.4862,
+                      0.4623,0.4349,0.4041,0.3703,0.3337,0.2946,
+                      0.2531,0.2097,0.1649,0.1186,0.0715,0.0239]
+
 class ies_parser:
     def __init__(self, filepath, output_file):
         self.header_value = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'', 'LAMPCAT':'', 'LUMINAIRE':'','LAMP':'','BALLAST':'','DISTRIBUTION':'','_MOUNTING':'','TILT':'','NUMBER_LAMP':'','LUMEN_LAMP':'','WIDTH':'','LENGTH':'','HEIGHT':'','BALLAST_FACTOR':'','INPUT_WATTS':'','OTHER':'','MORE':''}
