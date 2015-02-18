@@ -57,14 +57,6 @@ class ies_parser:
         return indexed_values
 
     def populate_non_headers(self):
-        #   Index - Value
-        #   0 = NUMBER_LAMP
-        #   1 = LUMEN_LAMP
-        #   7 = WIDTH
-        #   8 = LENGTH
-        #   9 = HEIGHT
-        #   10 = BALLAST_FACTOR
-        #   12 = INPUT_WATTS
         self.header_value['NUMBER_LAMP'] = self.data_below_headers[0][0]
         self.header_value['LUMEN_LAMP'] = self.data_below_headers[0][1]
         self.header_value['WIDTH'] = self.data_below_headers[0][7]
@@ -130,7 +122,7 @@ class ies_parser:
 
                             # We'll include a check here to see if a header value is already present.
                             # Some headers may appear multiple times in a single IES file. We'll combine those
-                            # Values into a single value
+                            # values into a single value
                             if self.header_found[line_header] == False:
                                 self.header_value[line_header] = line_value
                                 self.header_found[line_header] = True
@@ -167,7 +159,7 @@ class ies_parser:
     def populate_data_lists(self):
 
         number_of_val_lists = (int(self.data_below_headers[0][3])-1)/2
-        print number_of_val_lists
+        #print number_of_val_lists
 
         # Create list of empty lists for values
         candela_vals= []
@@ -186,6 +178,8 @@ class ies_parser:
         return candela_vals
         #print candela_vals[1]
 
+    def calculate_total_lumens(self):
+        pass
 
     def write_to_file(self):
         # Take self.header_values, and append it to a csv file
@@ -213,7 +207,6 @@ if __name__ == "__main__":
             parser = ies_parser(mypath+'/'+filename, output_file)
             # Print data after headers for debugging
             #parser.print_below_headers()
-            parser.populate_data_lists()
 
         else:
             pass
