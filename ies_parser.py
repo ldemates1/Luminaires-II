@@ -21,12 +21,14 @@ class ies_parser:
         self.output_file = output_file
         self.file_contents = self.read_file(self.filepath)
         self.data_below_headers = self.parse_after_headers()
+        self.ies_type = self.determine_ies_type()
+
         self.populate_headers()
         self.populate_non_headers()
         self.max_vert_angle = self.get_max_vert_angle()
         self.line_repeat_count = self.calculate_line_repeat()
         self.data_lists = self.populate_data_lists()
-        #self.write_to_file()
+        self.write_to_file()
 
     def read_file(self, path):
         my_file = open(str(path))
@@ -57,13 +59,24 @@ class ies_parser:
         return indexed_values
 
     def populate_non_headers(self):
-        self.header_value['NUMBER_LAMP'] = self.data_below_headers[0][0]
-        self.header_value['LUMEN_LAMP'] = self.data_below_headers[0][1]
-        self.header_value['WIDTH'] = self.data_below_headers[0][7]
-        self.header_value['LENGTH'] = self.data_below_headers[0][8]
-        self.header_value['HEIGHT'] = self.data_below_headers[0][9]
-        self.header_value['BALLAST_FACTOR'] = self.data_below_headers[1][0]
-        self.header_value['INPUT_WATTS'] = self.data_below_headers[1][2]
+
+        if self.ies_type == 1:
+            self.header_value['NUMBER_LAMP'] = self.data_below_headers[0][0]
+            self.header_value['LUMEN_LAMP'] = self.data_below_headers[0][1]
+            self.header_value['WIDTH'] = self.data_below_headers[0][7]
+            self.header_value['LENGTH'] = self.data_below_headers[0][8]
+            self.header_value['HEIGHT'] = self.data_below_headers[0][9]
+            self.header_value['BALLAST_FACTOR'] = self.data_below_headers[1][0]
+            self.header_value['INPUT_WATTS'] = self.data_below_headers[1][2]
+
+        elif self.ies_type == 2:
+            self.header_value['NUMBER_LAMP'] = self.data_below_headers[0][0]
+            self.header_value['LUMEN_LAMP'] = self.data_below_headers[1][0]
+            self.header_value['WIDTH'] = self.data_below_headers[7][0]
+            self.header_value['LENGTH'] = self.data_below_headers[8][0]
+            self.header_value['HEIGHT'] = self.data_below_headers[9][0]
+            self.header_value['BALLAST_FACTOR'] = self.data_below_headers[10][0]
+            self.header_value['INPUT_WATTS'] = self.data_below_headers[12][0]
 
     def print_headers(self):
         print self.header_value
@@ -90,7 +103,7 @@ class ies_parser:
                 if(len(tilt_line_content) > 1):
                     tilt_line_value = tilt_line_content[1].split('=')
 
-                    tilt_line_value = tilt_line_content[1].rstrip('[\r\n').lstrip(' ')
+                    tilt_line_value = tilt_line_content[1].rstrip('[\r\n').lstrip(' ').strip(',')
 
                     #Adding tilt value to disctionary
                     self.header_value['TILT'] = tilt_line_value
@@ -135,13 +148,23 @@ class ies_parser:
                     pass
 
     def get_max_vert_angle(self):
-        max_vert_angle = (float(self.data_below_headers[0][3])-1) * float(self.data_below_headers[2][1])
-        #print self.header_value['file_name'], " Vert. Ang. up to: ", max_vert_angle
+
+        if self.ies_type == 1:
+            max_vert_angle = (float(self.data_below_headers[0][3])-1) * float(self.data_below_headers[2][1])
+            #print self.header_value['file_name'], " Vert. Ang. up to: ", max_vert_angle
+        elif self.ies_type == 2:
+            max_vert_angle = (float(self.data_below_headers[3][0])-1) * float(self.data_below_headers[13][1])
+
         return max_vert_angle
 
     def calculate_line_repeat(self):
         # Begin searching for the max vert. angle on the third line below the header values
-        last_angle_index = 1
+
+        if self.ies_type == 1:
+            last_angle_index = 1
+        elif self.ies_type ==2:
+            last_angle_index = 12
+
         found_last_angle = False
         while found_last_angle == False:
             last_angle_index += 1
@@ -158,8 +181,13 @@ class ies_parser:
 
     def populate_data_lists(self):
 
-        number_of_val_lists = (int(self.data_below_headers[0][3])-1)/2
-        #print number_of_val_lists
+        if self.ies_type == 1:
+            number_of_val_lists = (int(self.data_below_headers[0][3])-1)/2
+            data_start_line = self.line_repeat_count + 3
+            #print number_of_val_lists
+        elif self.ies_type == 2:
+            number_of_val_lists = (int(self.data_below_headers[3][0])-1)/2
+            data_start_line = self.line_repeat_count + 14
 
         # Create list of empty lists for values
         candela_vals= []
@@ -167,7 +195,7 @@ class ies_parser:
             candela_vals.append([])
 
         total_count=0
-        for i in range(self.line_repeat_count+3, len(self.data_below_headers)):
+        for i in range(data_start_line, len(self.data_below_headers)):
             for j in range(0, len(self.data_below_headers[i])):
                 # Only care about even values in each line (midpoints)
                 if j % 2 != 0:
@@ -181,10 +209,16 @@ class ies_parser:
     def calculate_total_lumens(self):
 
         const_array = []
-        if float(self.data_below_headers[2][1]) == 5:
-            const_array = DEGREE_CONSTANTS_10
-        else:
-            const_array = DEGREE_CONSTANTS_5
+        if self.ies_type == 1:
+            if float(self.data_below_headers[2][1]) == 5:
+                const_array = DEGREE_CONSTANTS_10
+            else:
+                const_array = DEGREE_CONSTANTS_5
+        elif self.ies_type == 2:
+            if float(self.data_below_headers[13][1]) == 5:
+                const_array = DEGREE_CONSTANTS_10
+            else:
+                const_array = DEGREE_CONSTANTS_5
 
         total_lumens = 0
         for i in range(len(self.data_lists)):
@@ -222,6 +256,13 @@ class ies_parser:
         writer = csv.writer(open(self.output_file,'a'), delimiter=',')
         writer.writerow([output_string])
 
+
+    def determine_ies_type(self):
+        if(len(self.data_below_headers[0]) > 1):
+            return 1
+        else:
+            return 2
+
 if __name__ == "__main__":
 
     mypath = "ies"
@@ -231,7 +272,6 @@ if __name__ == "__main__":
     fail_count = 0
     for filename in list_of_filenames:
         if filename[-3:].lower() == 'ies':
-            #print filename
             try:
                 parser = ies_parser(mypath+'/'+filename, output_file)
                 parser.calculate_total_lumens()
