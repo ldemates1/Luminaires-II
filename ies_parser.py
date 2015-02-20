@@ -14,20 +14,20 @@ DEGREE_CONSTANTS_5 = [0.0239,0.0715,0.1186,0.1649,0.2097,0.2531,
 
 class ies_parser:
     def __init__(self, filepath, output_file):
-        self.header_value = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'', 'LAMPCAT':'', 'LUMINAIRE':'','LAMP':'','BALLAST':'','DISTRIBUTION':'','_MOUNTING':'','TILT':'','NUMBER_LAMP':'','LUMEN_LAMP':'','WIDTH':'','LENGTH':'','HEIGHT':'','BALLAST_FACTOR':'','INPUT_WATTS':'','OTHER':'','MORE':''}
-        self.header_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT', 'LAMPCAT', 'LUMINAIRE','LAMP','BALLAST','DISTRIBUTION', '_MOUNTING', 'TILT', 'NUMBER_LAMP', 'LUMEN_LAMP', 'WIDTH', 'LENGTH', 'HEIGHT', 'BALLAST_FACTOR','INPUT_WATTS','OTHER','MORE']
-        self.header_found = {'file_name':False,'IESNA':False,'TEST':False,'DATE':False,'ISSUEDATE':False,'MANUFAC':False,'LUMCAT':False, 'LAMPCAT':False, 'LUMINAIRE':False,'LAMP':False,'BALLAST':False,'DISTRIBUTION':False, '_MOUNTING':False, 'TILT':False, 'NUMBER_LAMP':False,'LUMEN_LAMP':False,'WIDTH':False, 'LENGTH':False, 'HEIGHT':False, 'BALLAST_FACTOR':False, 'INPUT_WATTS':False, 'OTHER':False,'MORE':False}
+        self.header_value = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'', 'LAMPCAT':'', 'LUMINAIRE':'','LAMP':'','BALLAST':'','DISTRIBUTION':'','_MOUNTING':'','TILT':'','NUMBER_LAMP':'','LUMEN_LAMP':'','WIDTH':'','LENGTH':'','HEIGHT':'','BALLAST_FACTOR':'','INPUT_WATTS':'','TOTAL_LUMENS':'','OTHER':'','MORE':''}
+        self.header_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT', 'LAMPCAT', 'LUMINAIRE','LAMP','BALLAST','DISTRIBUTION', '_MOUNTING', 'TILT', 'NUMBER_LAMP', 'LUMEN_LAMP', 'WIDTH', 'LENGTH', 'HEIGHT', 'BALLAST_FACTOR','INPUT_WATTS','TOTAL_LUMENS','OTHER','MORE']
+        self.header_found = {'file_name':False,'IESNA':False,'TEST':False,'DATE':False,'ISSUEDATE':False,'MANUFAC':False,'LUMCAT':False, 'LAMPCAT':False, 'LUMINAIRE':False,'LAMP':False,'BALLAST':False,'DISTRIBUTION':False, '_MOUNTING':False, 'TILT':False, 'NUMBER_LAMP':False,'LUMEN_LAMP':False,'WIDTH':False, 'LENGTH':False, 'HEIGHT':False, 'BALLAST_FACTOR':False, 'INPUT_WATTS':False, 'TOTAL_LUMENS':'','OTHER':False,'MORE':False}
         self.filepath = filepath
         self.output_file = output_file
         self.file_contents = self.read_file(self.filepath)
         self.data_below_headers = self.parse_after_headers()
         self.ies_type = self.determine_ies_type()
-
         self.populate_headers()
         self.populate_non_headers()
         self.max_vert_angle = self.get_max_vert_angle()
         self.line_repeat_count = self.calculate_line_repeat()
         self.data_lists = self.populate_data_lists()
+        self.calculate_total_lumens()
         self.write_to_file()
 
     def read_file(self, path):
@@ -234,6 +234,9 @@ class ies_parser:
             total_lumens += angle_total_lumens / (len(self.data_lists[i]) * 2 - 2)
 
         #print total_lumens
+        self.header_value['TOTAL_LUMENS'] = str(total_lumens)
+        self.header_found['TOTAL_LUMENS'] = True
+
         return total_lumens
 
 
@@ -272,13 +275,14 @@ if __name__ == "__main__":
     fail_count = 0
     for filename in list_of_filenames:
         if filename[-3:].lower() == 'ies':
+
             try:
                 parser = ies_parser(mypath+'/'+filename, output_file)
-                parser.calculate_total_lumens()
                 count += 1
             except:
                 print filename
                 fail_count += 1
+
         else:
             pass
 
