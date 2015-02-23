@@ -268,8 +268,8 @@ class ies_parser:
 
 if __name__ == "__main__":
 
-    mypath = "Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Commercial_Recessed"
-    output_file = "Users/DeMates/Documents/Luminaires/Commercial_Recessed_02_20_2015"
+    mypath = "/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Commercial_Recessed"
+    output_file = "/Users/DeMates/Documents/Luminaires/Commercial_Recessed_02_23_2015"
     list_of_filenames=listdir(mypath)
     count = 0
     fail_count = 0
