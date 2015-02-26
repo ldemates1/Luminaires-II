@@ -180,7 +180,7 @@ class ies_parser:
 
         if self.ies_type == 1:
             last_angle_index = 1
-        elif self.ies_type ==2:
+        elif self.ies_type == 2:
             last_angle_index = 12
 
         found_last_angle = False
@@ -201,19 +201,20 @@ class ies_parser:
 
         if self.ies_type == 1:
             number_of_val_lists = (int(self.data_below_headers[0][3])-1)/2
-            data_start_line = self.line_repeat_count + 3
-            #print number_of_val_lists
+
         elif self.ies_type == 2:
             number_of_val_lists = (int(self.data_below_headers[3][0])-1)/2
-            data_start_line = self.line_repeat_count + 3
+
+        data_start_line = self.line_repeat_count + 3
 
         # Create list of empty lists for values
         candela_vals= []
         for i in range(number_of_val_lists):
             candela_vals.append([])
-
+            
         total_count=0
         for i in range(data_start_line, len(self.data_below_headers)):
+
             for j in range(0, len(self.data_below_headers[i])):
                 # Only care about even values in each line (midpoints)
                 if j % 2 != 0:
@@ -225,7 +226,6 @@ class ies_parser:
         #print candela_vals[1]
 
     def calculate_total_lumens(self):
-
 
         lumens_already_calculated = False
 
