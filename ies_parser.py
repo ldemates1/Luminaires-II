@@ -12,11 +12,30 @@ DEGREE_CONSTANTS_5 = [0.0239,0.0715,0.1186,0.1649,0.2097,0.2531,
                       0.4623,0.4349,0.4041,0.3703,0.3337,0.2946,
                       0.2531,0.2097,0.1649,0.1186,0.0715,0.0239]
 
+
+# Type 1 files are where NUMBER_LAMP, LUMEN_LAMP, etc are on two lines
+# Type 2 files are when those values each are on their own line
+
+
 class ies_parser:
     def __init__(self, filepath, output_file):
-        self.header_value = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'','MANUFAC':'','LUMCAT':'', 'LAMPCAT':'', 'LUMINAIRE':'','LAMP':'','BALLAST':'','DISTRIBUTION':'','_MOUNTING':'','TILT':'','NUMBER_LAMP':'','LUMEN_LAMP':'','WIDTH':'','LENGTH':'','HEIGHT':'','BALLAST_FACTOR':'','INPUT_WATTS':'','TOTAL_LUMENS':'','OTHER':'','MORE':''}
-        self.header_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE','MANUFAC','LUMCAT', 'LAMPCAT', 'LUMINAIRE','LAMP','BALLAST','DISTRIBUTION', '_MOUNTING', 'TILT', 'NUMBER_LAMP', 'LUMEN_LAMP', 'WIDTH', 'LENGTH', 'HEIGHT', 'BALLAST_FACTOR','INPUT_WATTS','TOTAL_LUMENS','OTHER','MORE']
-        self.header_found = {'file_name':False,'IESNA':False,'TEST':False,'DATE':False,'ISSUEDATE':False,'MANUFAC':False,'LUMCAT':False, 'LAMPCAT':False, 'LUMINAIRE':False,'LAMP':False,'BALLAST':False,'DISTRIBUTION':False, '_MOUNTING':False, 'TILT':False, 'NUMBER_LAMP':False,'LUMEN_LAMP':False,'WIDTH':False, 'LENGTH':False, 'HEIGHT':False, 'BALLAST_FACTOR':False, 'INPUT_WATTS':False, 'TOTAL_LUMENS':'','OTHER':False,'MORE':False}
+        self.header_value = {'file_name':'','IESNA':'','TEST':'','DATE':'','ISSUEDATE':'',
+        'MANUFAC':'','LUMCAT':'', 'LAMPCAT':'', 'LUMINAIRE':'','LAMP':'','BALLAST':'',
+        'DISTRIBUTION':'','_MOUNTING':'','TILT':'','NUMBER_LAMP':'','LUMEN_LAMP':'',
+        'WIDTH':'','LENGTH':'','HEIGHT':'','BALLAST_FACTOR':'','INPUT_WATTS':'','TOTAL_LUMENS':'',
+        '_ABSOLUTELUMENS':'','_TOTALLUMINAIRELUMENS':'','OTHER':'','MORE':''}
+
+        self.header_names = ['file_name','IESNA','TEST','DATE','ISSUEDATE',
+        'MANUFAC','LUMCAT', 'LAMPCAT', 'LUMINAIRE','LAMP','BALLAST','DISTRIBUTION',
+        '_MOUNTING', 'TILT', 'NUMBER_LAMP', 'LUMEN_LAMP', 'WIDTH', 'LENGTH', 'HEIGHT',
+        'BALLAST_FACTOR','INPUT_WATTS','TOTAL_LUMENS','_ABSOLUTELUMENS','_TOTALLUMINAIRELUMENS','OTHER','MORE']
+
+        self.header_found = {'file_name':False,'IESNA':False,'TEST':False,'DATE':False,'ISSUEDATE':False,
+        'MANUFAC':False,'LUMCAT':False, 'LAMPCAT':False, 'LUMINAIRE':False,'LAMP':False,'BALLAST':False,
+        'DISTRIBUTION':False, '_MOUNTING':False, 'TILT':False, 'NUMBER_LAMP':False,'LUMEN_LAMP':False,
+        'WIDTH':False, 'LENGTH':False, 'HEIGHT':False, 'BALLAST_FACTOR':False, 'INPUT_WATTS':False,
+        'TOTAL_LUMENS':False,'_ABSOLUTELUMENS':False,'_TOTALLUMINAIRELUMENS':False,'OTHER':False,'MORE':False}
+
         self.filepath = filepath
         self.output_file = output_file
         self.file_contents = self.read_file(self.filepath)
@@ -103,7 +122,7 @@ class ies_parser:
                 if(len(tilt_line_content) > 1):
                     tilt_line_value = tilt_line_content[1].split('=')
 
-                    tilt_line_value = tilt_line_content[1].rstrip('[\r\n').lstrip(' ').strip(',')
+                    tilt_line_value = tilt_line_content[1].rstrip('[\r\n').lstrip(' ').replace(',', '')
 
                     #Adding tilt value to disctionary
                     self.header_value['TILT'] = tilt_line_value
@@ -123,8 +142,7 @@ class ies_parser:
                     if(len(line_header) > 1):
 
                         line_header = line_header[1].rstrip('[\r\n')
-
-                        line_value = line_content[1].rstrip('[\r\n').lstrip(' ')
+                        line_value = line_content[1].rstrip('[\r\n').strip().replace(',', '')
 
                         #print line_header + ' ' + line_value
 
@@ -187,7 +205,7 @@ class ies_parser:
             #print number_of_val_lists
         elif self.ies_type == 2:
             number_of_val_lists = (int(self.data_below_headers[3][0])-1)/2
-            data_start_line = self.line_repeat_count + 14
+            data_start_line = self.line_repeat_count + 3
 
         # Create list of empty lists for values
         candela_vals= []
@@ -208,34 +226,46 @@ class ies_parser:
 
     def calculate_total_lumens(self):
 
-        const_array = []
-        if self.ies_type == 1:
-            if float(self.data_below_headers[2][1]) == 5:
-                const_array = DEGREE_CONSTANTS_10
-            else:
-                const_array = DEGREE_CONSTANTS_5
-        elif self.ies_type == 2:
-            if float(self.data_below_headers[13][1]) == 5:
-                const_array = DEGREE_CONSTANTS_10
-            else:
-                const_array = DEGREE_CONSTANTS_5
 
-        total_lumens = 0
-        for i in range(len(self.data_lists)):
-            self.data_lists[i][:] =[float(x)*const_array[i] for x in self.data_lists[i]]
-            #print self.data_lists[i]
+        lumens_already_calculated = False
 
-            angle_total_lumens = 0
-            for j in range(len(self.data_lists[i])):
-                if j == 0 or j == (len(self.data_lists[i])-1):
-                    angle_total_lumens += self.data_lists[i][j]
+        if self.header_found['_ABSOLUTELUMENS']:
+            total_lumens = self.header_value['_ABSOLUTELUMENS']
+            lumens_already_calculated = True
+        elif self.header_found['_TOTALLUMINAIRELUMENS']:
+            total_lumens = self.header_value['_TOTALLUMINAIRELUMENS']
+            lumens_already_calculated = True
+
+        # Only run if the lumen value is not already in the headers.
+        if lumens_already_calculated == False:
+            const_array = []
+            if self.ies_type == 1:
+                if float(self.data_below_headers[2][1]) == 5:
+                    const_array = DEGREE_CONSTANTS_10
                 else:
-                    angle_total_lumens += (self.data_lists[i][j] * 2)
-            total_lumens += angle_total_lumens / (len(self.data_lists[i]) * 2 - 2)
+                    const_array = DEGREE_CONSTANTS_5
+            elif self.ies_type == 2:
+                if float(self.data_below_headers[13][1]) == 5:
+                    const_array = DEGREE_CONSTANTS_10
+                else:
+                    const_array = DEGREE_CONSTANTS_5
 
-        #print total_lumens
-        self.header_value['TOTAL_LUMENS'] = str(total_lumens)
-        self.header_found['TOTAL_LUMENS'] = True
+            total_lumens = 0
+            for i in range(len(self.data_lists)):
+                self.data_lists[i][:] =[float(x)*const_array[i] for x in self.data_lists[i]]
+                #print self.data_lists[i]
+
+                angle_total_lumens = 0
+                for j in range(len(self.data_lists[i])):
+                    if j == 0 or j == (len(self.data_lists[i])-1):
+                        angle_total_lumens += self.data_lists[i][j]
+                    else:
+                        angle_total_lumens += (self.data_lists[i][j] * 2)
+                total_lumens += angle_total_lumens / (len(self.data_lists[i]) * 2 - 2)
+
+            #print total_lumens
+            self.header_value['TOTAL_LUMENS'] = str(total_lumens)
+            self.header_found['TOTAL_LUMENS'] = True
 
         return total_lumens
 
@@ -268,8 +298,8 @@ class ies_parser:
 
 if __name__ == "__main__":
 
-    mypath = "/Users/DeMates/Google Drive/SFO Group Files/Projects/FEMP EEPP/Luminaires/Commercial_Recessed"
-    output_file = "/Users/DeMates/Documents/Luminaires/Commercial_Recessed_02_23_2015"
+    mypath = "ies_samp"
+    output_file = "output.csv"
     list_of_filenames=listdir(mypath)
     count = 0
     fail_count = 0
